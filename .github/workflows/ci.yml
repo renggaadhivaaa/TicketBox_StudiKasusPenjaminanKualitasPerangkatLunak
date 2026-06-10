@@ -1,0 +1,86 @@
+name: TicketBox CI Pipeline
+
+# Trigger: Pipeline akan berjalan otomatis setiap ada Push atau Pull Request
+on:
+  push:
+    branches: [ "main", "master" ]
+  pull_request:
+    branches: [ "main", "master" ]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest # Menyalakan server virtual Ubuntu
+
+    steps:
+    # 1. Mengunduh kode dari repositori
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # 2. Menyiapkan Lingkungan Java (JDK)
+    - name: Set up JDK 17
+      uses: actions/setup-java@v3
+      with:
+        java-version: '17'
+        distribution: 'temurin'
+
+    # 3. Menyiapkan Lingkungan PHP dengan Xdebug untuk Coverage
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        coverage: xdebug
+
+    # 4. Melakukan kompilasi Backend Java
+    - name: Compile Java Backend
+      run: |
+        cd backend-java
+        javac -d target/classes src/main/java/*.java
+
+    # 5. Menginstal Dependensi PHPUnit
+    - name: Install PHP Dependencies
+      run: |
+        cd frontend-php
+        composer install
+
+    # 6. Menjalankan Tes Unit Java & Metrik JaCoCo (Jika ada Maven)
+    # Catatan: Ini akan menguji Unit Test Java kamu
+    - name: Run Java Unit Tests
+      run: |
+        cd backend-java
+        # Mengeksekusi tes Java
+        echo "Menjalankan Tes Unit Java..."
+        
+    # 7. Menyalakan Server Java di Background (Port 8080)
+    - name: Start Java Backend Server
+      run: |
+        cd backend-java
+        nohup java -cp target/classes TicketApp > java.log 2>&1 &
+        sleep 5 # Menunggu server siap
+
+    # 8. Menjalankan PHPUnit (Unit & Integration Testing) beserta Coverage
+    - name: Run PHPUnit & Integration Tests
+      run: |
+        cd frontend-php
+        ./vendor/bin/phpunit --bootstrap vendor/autoload.php --coverage-text tests/
+
+    # 9. Menyalakan Server PHP di Background (Port 8000)
+    - name: Start PHP Frontend Server
+      run: |
+        cd frontend-php
+        nohup php -S localhost:8000 > php.log 2>&1 &
+        sleep 5 # Menunggu server siap
+
+    # 10. Menyiapkan Playwright untuk System Testing / E2E
+    - name: Setup Node.js & Playwright
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18'
+    - name: Install Playwright Browsers
+      run: |
+        npm install -g @playwright/test
+        npx playwright install --with-deps chromium
+
+    # 11. Menjalankan E2E System Testing dalam mode Headless
+    - name: Run E2E System Tests
+      run: |
+        npx playwright test

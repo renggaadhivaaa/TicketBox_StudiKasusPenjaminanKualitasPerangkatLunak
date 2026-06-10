@@ -1,0 +1,14 @@
+[
+  {
+    "id": "T01",
+    "name": "Konser Simfoni",
+    "basePrice": 500000,
+    "stock": 100
+  },
+  {
+    "id": "T02",
+    "name": "Festival Rock",
+    "basePrice": 300000,
+    "stock": 50
+  }
+]
