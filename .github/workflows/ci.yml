@@ -84,4 +84,5 @@ jobs:
         npm init -y
         npm install @playwright/test
         npx playwright install --with-deps chromium
-        npx playwright test ../backend-java/src/test/java/e2e.spec.js
+        cp ../backend-java/src/test/java/e2e.spec.js .
+        npx playwright test e2e.spec.js
