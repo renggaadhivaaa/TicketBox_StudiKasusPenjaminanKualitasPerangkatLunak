@@ -57,11 +57,11 @@ jobs:
         nohup java -cp target/classes TicketApp > java.log 2>&1 &
         sleep 5 # Menunggu server siap
 
-    # 8. Menjalankan PHPUnit (Unit & Integration Testing) beserta Coverage
+    # 8. Menjalankan PHPUnit (Unit & Integration Testing)
     - name: Run PHPUnit & Integration Tests
       run: |
         cd frontend-php
-        php vendor/bin/phpunit --bootstrap vendor/autoload.php
+        php vendor/bin/phpunit --bootstrap vendor/autoload.php tests/
 
     # 9. Menyalakan Server PHP di Background (Port 8000)
     - name: Start PHP Frontend Server
