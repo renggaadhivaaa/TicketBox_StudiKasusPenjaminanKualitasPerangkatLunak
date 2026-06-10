@@ -70,18 +70,18 @@ jobs:
         nohup php -S localhost:8000 > php.log 2>&1 &
         sleep 5 # Menunggu server siap
 
-    # 10. Menyiapkan Playwright untuk System Testing / E2E
+    # 10. Menyiapkan Node.js
     - name: Setup Node.js & Playwright
       uses: actions/setup-node@v3
       with:
         node-version: '18'
-    - name: Install Playwright Browsers
+
+    # 11. Menjalankan E2E System Testing di Ruang Isolasi
+    - name: Run E2E System Tests
       run: |
+        mkdir playwright-e2e
+        cd playwright-e2e
         npm init -y
         npm install @playwright/test
         npx playwright install --with-deps chromium
-
-    # 11. Menjalankan E2E System Testing
-    - name: Run E2E System Tests
-      run: |
-        npx playwright test backend-java/src/test/java/e2e.spec.js
+        npx playwright test ../backend-java/src/test/java/e2e.spec.js
