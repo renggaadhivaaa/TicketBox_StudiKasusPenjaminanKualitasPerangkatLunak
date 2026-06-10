@@ -77,10 +77,11 @@ jobs:
         node-version: '18'
     - name: Install Playwright Browsers
       run: |
-        npm install -g @playwright/test
+        npm init -y
+        npm install @playwright/test
         npx playwright install --with-deps chromium
 
-    # 11. Menjalankan E2E System Testing dalam mode Headless
+    # 11. Menjalankan E2E System Testing
     - name: Run E2E System Tests
       run: |
         npx playwright test backend-java/src/test/java/e2e.spec.js
