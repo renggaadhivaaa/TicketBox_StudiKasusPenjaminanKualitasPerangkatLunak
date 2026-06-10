@@ -83,4 +83,4 @@ jobs:
     # 11. Menjalankan E2E System Testing dalam mode Headless
     - name: Run E2E System Tests
       run: |
-        npx playwright test
+        npx playwright test backend-java/src/test/java/e2e.spec.js
