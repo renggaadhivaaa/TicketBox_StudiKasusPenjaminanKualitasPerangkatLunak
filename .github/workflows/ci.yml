@@ -61,7 +61,7 @@ jobs:
     - name: Run PHPUnit & Integration Tests
       run: |
         cd frontend-php
-        php vendor/bin/phpunit --bootstrap vendor/autoload.php --coverage-text tests/
+        php vendor/bin/phpunit --bootstrap vendor/autoload.php
 
     # 9. Menyalakan Server PHP di Background (Port 8000)
     - name: Start PHP Frontend Server
